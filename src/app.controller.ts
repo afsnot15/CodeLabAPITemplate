@@ -1,6 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { HttpResponse } from './shared/classes/http-response';
+import { IResponse } from './shared/interfaces/response.interface';
 
 @Controller()
 export class AppController {
@@ -8,7 +10,9 @@ export class AppController {
 
   @Get()
   @ApiOperation({ summary: 'Hello World' })
-  getHello(): string {
-    return this.appService.getHello();
+  async getHello(): Promise<IResponse<string>> {
+    const data = await this.appService.getHello();
+
+    return new HttpResponse<string>(data).onSuccess('Hello World!');
   }
 }
